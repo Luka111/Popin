@@ -1,0 +1,35 @@
+$icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+
+@import 'bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
+
+// bower:scss
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
+// endbower
+
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#content{
+  border:solid 1px;
+  width:80%;
+  height:500px;
+}
+
+.row-fluid{
+  height:30%;
+}
+
+.grid-elem{
+  border:solid 1px;
+  width:30%;
+  height:100%;
+  margin:5px;
+}
+
+.main-content{
+  height:100%;
+}
+
