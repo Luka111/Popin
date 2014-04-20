@@ -1,10 +1,12 @@
 'use strict';
 angular.module('Popin',[]).service('popinService',function(){
 
+  this.popinWorking = true;
+
   this.updatePopinCollection = function(id){
     this.collector[id].tickTimeout = 1000 + parseInt(Math.random()*1000);
     this.collector[id].magicNumber = parseInt(Math.random()*10);
-    this.collector[id].allowToPlay = true; 
+    this.collector[id].allowToPlay = true;
   };
  
   this.disableCollectMe = function (id){
@@ -23,7 +25,12 @@ angular.module('Popin',[]).service('popinService',function(){
     }
   };
 
+  this.disablePopinWorking = function(){
+    this.popinWorking = false;
+  };
+
   this.initCollector = function(){
+    this.popinWorking = true;
     this.collector = [];
     for(var i=0; i<9; i++){
       this.collector[i] = {};

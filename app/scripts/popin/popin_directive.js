@@ -22,14 +22,14 @@ angular.module('Popin').directive('popin',function($timeout){
         var ngModel = scope.ngModel;
         var worker = function(){
           var timeLeft = ngModel.collector[scope.id].tickTimeout;
-          console.log('Vremena ostalo:',timeLeft);
+          if (ngModel.popinWorking === false){
+            return;
+          }
           if (timeLeft > 0){
             ngModel.collector[scope.id].tickTimeout -= 100;
             $timeout(worker,100);
           }else{
-            console.log('Zavrsio timer! Moj id: ',_scope.id);
             ngModel.updatePopinCollection(_scope.id);
-            console.log('NOVI TIMEOUT!!! - ',ngModel.collector[_scope.id].tickTimeout);
             doTimeout();
           }
         };
