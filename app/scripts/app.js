@@ -3,10 +3,12 @@
 angular
   .module('clickMeApp', [
     'Popin',
+    'Keyboard',
     'ngCookies',
     'ngResource',
     'ngSanitize',
-    'ngRoute'
+    'ngRoute',
+    'ngAnimate'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -17,7 +19,7 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  }).controller('GameController',function($timeout, popinService){
+  }).controller('GameController',function($timeout, popinService,KeyboardService){
     this.popin = popinService;
     this.gameInit1 = false;
     this.prepareForGame = false;
@@ -129,12 +131,21 @@ angular
     };
 
     this.initGame = function(){
+      KeyboardService.init();
       this.gameEnds = false;
       this.gameInit1 = true;
       this.score = 0;
       this.inRow = 0;
       this.combo = 0;
       this.numberChoice = -1;
+      this.startGame();
+    };
+
+    this.startGame = function(){
+      var self = this;
+      KeyboardService.on(function(key){
+        self.collectMe(key);
+      });
     };
 
     this.initGame();
