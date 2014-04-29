@@ -26,6 +26,8 @@ angular
     this.gameStarts = false;
     this.gameEnds = false;
     this.numberChoice = -1;
+    this.multi = 1;
+    this.onFireTimer = undefined;
 
     //Timeout functions
     //...
@@ -43,6 +45,9 @@ angular
         }else{
           t.combo = 0;
           t.comboTimeLeft = 0;
+          if (t.onFireTimer === undefined){
+            t.popin.resetTime();
+          }
           return;
         }
       };
@@ -80,27 +85,65 @@ angular
       return worker;
     };
 
+    this.onFireTicking = function(){
+      var t = this;
+      var worker = function(){
+        if(t.onFireTimer > 0){
+          t.onFireTimer -= 1;
+          $timeout(worker,1000);
+        }else{
+          t.popin.resetTime();
+          t.multi = 1;
+          t.onFireTimer = undefined;
+          t.combo=0;
+          return;
+        }
+      };
+      return worker;
+    };
+
     //...
 
     this.calculateBonusPoints = function(){
-      
+      switch(this.combo){
+      case 10:
+        this.popin.changeTime(0.9);
+        break;
+      case 15:
+        this.popin.changeTime(0.95);
+        break;
+      case 5:
+        //increase time + double poins = ON FIRE
+        this.popin.changeTime(0.777);
+        this.multi = 3;
+        this.onFireTimer = 7;
+        var doTimeout = this.onFireTicking();
+        doTimeout();
+        break;
+      }
     };
 
     this.collectMe = function(idString){
+      if (this.gameStarts === false){
+         return;
+      }
       var idInt = parseInt(idString) - 1;
       if ((this.numberChoice === -1) || (this.popin.getAllowToPlay(idInt) === false)){
         return;
       }
       var result = this.popin.checkValidation(idInt,this.numberChoice);
-      this.score += result;
+      this.score += result*this.multi; //this.multi initially 1, if the player get on fire, multi increases
       if (result>0) { 
         this.inRow ++;
         this.combo ++;
         this.calculateBonusPoints();
-        this.comboTimeLeft = 5; //sec
+        this.comboTimeLeft = 4; //sec
         var doTimeout = this.comboTicking(this.combo);
         doTimeout();
       }else{
+        if((this.combo >= 10) && (this.onFireTimer === undefined)){
+          this.popin.resetTime();
+        }
         this.inRow = 0;
         this.combo = 0;
         this.comboTimeLeft = 0;
